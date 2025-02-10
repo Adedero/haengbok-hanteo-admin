@@ -27,6 +27,7 @@ export interface Settings {
   hideBalance: boolean
   lang: 'en' | 'ko'
   darkMode: boolean
+  contactAddress: string
   appDetails: AppDetails
 }
 

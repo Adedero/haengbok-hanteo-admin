@@ -117,6 +117,11 @@ const updateSettings = async () => {
 
       <div class="mt-4 grid gap-4">
         <div class="flex-col gap-1">
+          <label for="contact" class="text-sm text-slate-500 font-medium">Contact Address</label>
+          <InputText v-model.trim="data.contactAddress" id="contact" fluid :disabled="!isEditing" />
+        </div>
+
+        <div class="flex-col gap-1">
           <label for="lang" class="text-sm text-slate-500 font-medium">Language</label>
           <Select
             v-model="data.lang"

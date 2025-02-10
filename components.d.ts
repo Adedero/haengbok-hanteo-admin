@@ -22,6 +22,7 @@ declare module 'vue' {
     Message: typeof import('primevue/message')['default']
     NavBar: typeof import('./src/components/NavBar.vue')['default']
     Paginator: typeof import('primevue/paginator')['default']
+    Password: typeof import('primevue/password')['default']
     PasswordReset: typeof import('./src/components/PasswordReset.vue')['default']
     PropertyCreator: typeof import('./src/components/PropertyCreator.vue')['default']
     PropertyEditor: typeof import('./src/components/PropertyEditor.vue')['default']
