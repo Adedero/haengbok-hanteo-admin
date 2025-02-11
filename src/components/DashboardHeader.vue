@@ -5,9 +5,10 @@ interface Props {
   availableBalance?: number
   transactions?: number
   properties?: number
+  users?: number
 }
 
-const { availableBalance, transactions, properties } = defineProps<Props>()
+const { availableBalance, transactions, properties, users } = defineProps<Props>()
 
 const data = computed(() => {
   return [
@@ -16,6 +17,12 @@ const data = computed(() => {
       value: `${availableBalance?.toLocaleString()}`,
       bgColor: 'bg-[--p-primary-100]',
       textColor: 'text-[--p-primary-color]',
+    },
+    {
+      name: 'Users',
+      value: users,
+      bgColor: 'bg-amber-100',
+      textColor: 'text-amber-500'
     },
     {
       name: 'Transactions',
@@ -46,7 +53,7 @@ const data = computed(() => {
         <span class="pi pi-money-bill"></span>
       </div>
       <div class="text-sm">
-        <p class="font-bold">
+        <p class="font-bold text-xl">
           <span v-if="item.name === 'Available Balance'">&#8361;</span>
           <span>{{ item.value }}</span>
         </p>

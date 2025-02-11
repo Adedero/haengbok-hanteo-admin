@@ -3,6 +3,7 @@ import logo from '@/assets/img/logo.png'
 
 const routes = [
   { name: 'Dashboard', pathName: 'dashboard', icon: 'pi pi-th-large' },
+  { name: 'Users', pathName: 'users', icon: 'pi pi-users' },
   { name: 'Properties', pathName: 'properties', icon: 'pi pi-building-columns' },
   { name: 'Transactions', pathName: 'transactions', icon: 'pi pi-money-bill' },
 ]

@@ -9,8 +9,9 @@ const router = useRouter()
 
 interface Props {
   user: User
+  index: number
 }
-const { user } = defineProps<Props>()
+const { user, index } = defineProps<Props>()
 
 const customer = ref({
   ...user,
@@ -44,7 +45,10 @@ const updateUser = async () => {
 <template>
   <div class="bg-white rounded-lg p-4 w-full">
     <div class="flex items-center justify-between">
-      <p class="font-medium">Customer</p>
+      <div class="flex items-center gap-1">
+        <p>{{ index + 1 }}.</p>
+        <p class="font-medium">{{ customer.name }}</p>
+      </div>
       <Button
         v-if="!isEditing"
         @click="isEditing = true"

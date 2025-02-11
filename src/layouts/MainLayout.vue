@@ -26,9 +26,7 @@ const isOpen = ref(false)
     </div>
 
     <section class="relative min-h-0 h-full flex-grow flex flex-col gap-4 *:flex-shrink-0">
-      <header
-        class="sticky z-50 shadow-sm md:shadow-none top-0 p-2 lg:p-4 flex items-center justify-between gap-5 bg-white lg:rounded-lg"
-      >
+      <header class="sticky z-50 shadow-sm md:shadow-none top-0 p-2 lg:p-4 flex items-center justify-between gap-5 bg-white lg:rounded-lg">
         <h1 v-if="$route && $route.name" class="text-lg font-semibold">
           {{ ($route.name as string)[0].toUpperCase() + ($route.name as string).slice(1) }}
         </h1>

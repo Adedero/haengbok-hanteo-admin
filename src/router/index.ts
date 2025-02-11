@@ -21,25 +21,25 @@ const router = createRouter({
           path: '',
           name: 'dashboard',
           component: HomeView,
-          meta: {
-            requiresAuth: true
-          }
+          meta: { requiresAuth: true }
         },
         {
-          path: '/transactions',
+          path: 'users',
+          name: 'users',
+          component: () => import('../views/users/UsersView.vue'),
+          meta: { requiresAuth: true }
+        },
+        {
+          path: 'transactions',
           name: 'transactions',
           component: () => import('../views/transactions/TransactionsView.vue'),
-          meta: {
-            requiresAuth: true
-          }
+          meta: { requiresAuth: true }
         },
         {
-          path: '/properties',
+          path: 'properties',
           name: 'properties',
           component: () => import('../views/properties/PropertiesView.vue'),
-          meta: {
-            requiresAuth: true
-          }
+          meta: { requiresAuth: true }
         },
       ],
     },
