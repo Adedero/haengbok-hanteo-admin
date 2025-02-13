@@ -25,7 +25,7 @@ const addTransaction = async () => {
     return
   }
   const transaction = await createTransaction(data.value)
-  await useAsyncData<{ item: Transaction }>(
+  await useAsyncData<{ item: Transaction, availableBalance: number }>(
     'api/transactions',
     { loading, error, config: { router, method: 'POST', body: transaction } },
     (payload) => {
@@ -46,7 +46,7 @@ async function createTransaction(value: Partial<Transaction>): Promise<Partial<T
 
   // Calculate charges and amount, rounding to ensure they are integers
   const charges = Math.round(amountPaid * randomPercentage)
-  const amount = Math.round(amountPaid - charges)
+  const amount = Math.max(Math.round(amountPaid - charges), 0)
 
   const [customers, locations] = await Promise.all([
     import('../data/customers'),

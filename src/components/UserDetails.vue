@@ -2,16 +2,22 @@
 import useAsyncData from '@/composables/use-async-data'
 import { type FetchError } from '@/composables/use-fetch'
 import type { User } from '@/types'
+import { useConfirm } from 'primevue'
 import { computed, ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const confirm = useConfirm()
 
 interface Props {
   user: User
   index: number
 }
 const { user, index } = defineProps<Props>()
+
+const emit = defineEmits<{
+  deleteUser: [id: string]
+}>()
 
 const customer = ref({
   ...user,
@@ -40,6 +46,45 @@ const updateUser = async () => {
     },
   )
 }
+
+const deleting = ref<boolean>(false)
+const errorDeleting = ref<FetchError | null>(null)
+
+const deleteUser = async () => {
+  await useAsyncData(
+    `api/users/${customer.value._id}`,
+    {
+      loading: deleting,
+      error: errorDeleting,
+      config: { router, method: 'DELETE' }
+    },
+    () => {
+      emit('deleteUser', customer.value._id)
+    }
+  )
+}
+
+
+const confirmDelete = () => {
+  confirm.require({
+    message: 'Do you want to delete this user? This action cannot be reversed.',
+    header: 'Delete User',
+    icon: 'pi pi-info-circle',
+    rejectLabel: 'Cancel',
+    rejectProps: {
+      label: 'Cancel',
+      severity: 'secondary',
+      outlined: true,
+    },
+    acceptProps: {
+      label: 'Delete',
+      severity: 'danger',
+    },
+    accept: () => {
+      deleteUser()
+    },
+  })
+}
 </script>
 
 <template>
@@ -49,13 +94,27 @@ const updateUser = async () => {
         <p>{{ index + 1 }}.</p>
         <p class="font-medium">{{ customer.name }}</p>
       </div>
-      <Button
-        v-if="!isEditing"
-        @click="isEditing = true"
-        size="small"
-        label="Edit"
-        icon="pi pi-user-edit"
-      />
+
+      <div class="flex items-center gap-1">
+        <Button
+          v-if="!isEditing"
+          @click="isEditing = true"
+          size="small"
+          label="Edit"
+          icon="pi pi-user-edit"
+        />
+
+        <Button
+          v-if="!isEditing"
+          @click="confirmDelete"
+          size="small"
+          label="Delete"
+          icon="pi pi-trash"
+          severity="danger"
+          :loading="deleting"
+        />
+      </div>
+
 
       <div v-if="isEditing" class="flex items-center gap-2">
         <Button
@@ -77,6 +136,8 @@ const updateUser = async () => {
     </div>
 
     <hr class="my-2" />
+
+    <ErrorMessage :error="errorDeleting" closable />
 
     <div class="mt-4 grid md:grid-cols-2 gap-4">
       <div>

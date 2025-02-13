@@ -1,4 +1,4 @@
 <template>
-  <ConfirmDialog></ConfirmDialog>
+  <ConfirmDialog class="max-w-96" />
   <RouterView />
 </template>

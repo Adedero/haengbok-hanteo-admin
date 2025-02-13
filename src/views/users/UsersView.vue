@@ -43,6 +43,12 @@ async function getUserCount() {
   )
 }
 
+const onDeleteUser = (id: string) => {
+  if (!users.value) return
+  users.value = users.value.filter((user) => user._id !== id)
+  userCount.value = Math.max((userCount.value ?? 0) - 1, 0)
+}
+
 onMounted(async () => {
   await Promise.all([getUsers(), getUserCount()])
 })
@@ -61,7 +67,7 @@ onMounted(async () => {
 
     <div v-if="!loading && !error && users" class="grid gap-2 mb-4">
       <div v-for="user, index in users" :key="user._id">
-        <UserDetails :user :index />
+        <UserDetails :user :index @delete-user="onDeleteUser" />
       </div>
     </div>
 
