@@ -38,6 +38,16 @@ const loading = ref(false)
 const error = ref<FetchError | null>(null)
 
 const updateUser = async () => {
+  if (customer.value.kyc?.status === 'successful') {
+    customer.value.kyc = {
+      ...(customer.value.kyc ?? {}),
+      verifiedAt: new Date(Date.now())
+    }
+  }
+
+  if (customer.value.kyc?.status !== 'successful') {
+    delete customer.value.kyc?.verifiedAt
+  }
   await useAsyncData(
     `api/users/${customer.value._id}`,
     { loading, error, config: { router, method: 'PUT', body: customer.value } },
@@ -175,6 +185,34 @@ const confirmDelete = () => {
       <div>
         <label for="location" class="text-sm text-slate-500 font-medium">Location</label>
         <InputText v-model="customer.location.country" id="location" fluid :disabled="!isEditing" />
+      </div>
+
+
+      <div class="md:col-span-2">
+        <p class="text-sm text-slate-500 font-medium">ID Verification</p>
+        <div v-if="!customer.kyc?.document" class="text-sm">
+          No ID has been submitted by this user for verification.
+        </div>
+
+        <div v-else class="grid md:grid-cols-2 gap-4">
+          <div class="grid">
+            <p class="text-sm text-slate-500 font-medium">Document</p>
+            <a :href="`${customer.kyc.document}`" :download="`ID-${customer.name}.${customer.kyc.ext}`">
+              <Button label="Download document" icon="pi pi-file" fluid />
+            </a>
+          </div>
+
+          <div class="grid">
+            <label for="kyc-status" class="text-sm text-slate-500 font-medium">Status</label>
+            <Select
+              v-model="customer.kyc.status"
+              :options="['pending', 'successful', 'failed']"
+              input-id="kyc-status"
+              fluid
+              :disabled="!isEditing"
+            />
+          </div>
+        </div>
       </div>
 
       <PasswordReset v-if="isEditing" :user="customer" @password-reset="isEditing = false" />

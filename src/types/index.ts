@@ -13,6 +13,14 @@ export interface User {
   lastLogin: Date | string
   createdAt: Date | string
   updatedAt: Date | string
+  kyc?: {
+    idType?: string
+    document?: string
+    ext?: string
+    status?: 'pending' | 'successful' | 'failed',
+    submittedAt?: Date
+    verifiedAt?: Date
+  }
 }
 
 export interface AppDetails {
