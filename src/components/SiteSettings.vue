@@ -77,6 +77,7 @@ const updateSettings = async () => {
               v-model="data.availableBalance"
               placeholder="Available balance"
               class="text-xl font-semibold"
+              :min="0"
             />
           </InputGroup>
 
