@@ -2,7 +2,7 @@
 import useAsyncData from '@/composables/use-async-data'
 import { type FetchError } from '@/composables/use-fetch'
 import type { Transaction } from '@/types'
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
@@ -14,6 +14,8 @@ const data = ref<Partial<Transaction>>({
   type: 'deposit',
   status: 'successful',
 })
+
+const defaultTitle = computed(() => data.value.type === 'deposit' ? 'Property Sale' : 'Property Purchase')
 
 const loading = ref(false)
 const error = ref<FetchError | null>(null)
@@ -36,7 +38,7 @@ const addTransaction = async () => {
 }
 
 async function createTransaction(value: Partial<Transaction>): Promise<Partial<Transaction>> {
-  const title = value.type === 'deposit' ? 'Property Sale' : 'Property Purchase'
+  const title = value.title || defaultTitle.value;
 
   const amountPaid = value.amountPaid ?? 0
 
@@ -59,7 +61,7 @@ async function createTransaction(value: Partial<Transaction>): Promise<Partial<T
   const customer = customers.default[randomIndexes[0]]
   const location = locations.default[randomIndexes[1]]
 
-  const description = `${value.type === 'deposit' ? 'Sale' : 'Purchase'} of property at ${location}`
+  const description = value.description || `${value.type === 'deposit' ? 'Sale' : 'Purchase'} of property at ${location}`
 
   return {
     title,
@@ -93,8 +95,14 @@ function generateTransactionRef(): string {
 <template>
   <div>
     <Button @click="visible = true" label="Add" icon="pi pi-plus" />
-    <Dialog header="New Transaction" v-model:visible="visible" modal>
+    <Dialog header="New Transaction" v-model:visible="visible" modal class="md:w-96">
       <div class="grid gap-4">
+        <div class="form-control">
+          <label for="title">Title <small class="font-semibold">(optional)</small></label>
+          <InputText v-model="data.title" id="title" placeholder="Transaction title" />
+          <small class="mt-1">If you don't enter a title, the default will be: <b>{{ defaultTitle }}</b></small>
+        </div>
+
         <div class="form-control">
           <label for="amount">Amount</label>
           <InputGroup>
@@ -116,6 +124,11 @@ function generateTransactionRef(): string {
             input-id="status"
             :options="['successful', 'pending', 'failed']"
           />
+        </div>
+
+        <div class="form-control">
+          <label for="description">Description</label>
+          <Textarea v-model="data.description" id="description" rows="4" />
         </div>
 
         <ErrorMessage :error show-header />
